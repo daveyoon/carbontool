@@ -7,6 +7,7 @@ for client-side backbone application
 
 import logging
 import urllib2
+import time
 try:
     import json
 except:
@@ -78,12 +79,16 @@ def error(request):
     if request.method == "POST":
         Error.track(request.raw_post_data)
         return HttpResponse("logged, thanks!")
-    return HttpResponse("use POST", status=403)
+    else:
+        data = {
+            'count': Error.count(),
+            'latest': [{'date': time.mktime(x.when.timetuple()) , 'error': x.error} for x in Error.latest()]
+        }
+        return HttpResponse(json.dumps(data), mimetype='application/json')
 
 def errors(request):
     text = '\n'.join([x.when.isoformat() + " =>" + x.error for x in Error.latest()])
     return HttpResponse(text, mimetype='text/plain')
-    
 
 
 

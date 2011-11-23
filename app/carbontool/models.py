@@ -29,9 +29,18 @@ if 'SERVER_SOFTWARE' in os.environ and os.environ['SERVER_SOFTWARE'].startswith(
             Error(error=log).save();
 
         @staticmethod
-        def latest():
-            return Error.objects.order_by('-when')[:10]
+        def count(since=None):
+            o = Error.objects
+            if since:
+                o = o.filter(when__gt=since)
+            return o.count()
 
+        @staticmethod
+        def latest(items=10, since=None):
+            q = Error.objects
+            if since:
+                q = q.filter(when__gt=since)
+            return q.order_by('-when')[:items]
 
 else:
     from models_appengine import *

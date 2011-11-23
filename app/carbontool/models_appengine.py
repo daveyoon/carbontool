@@ -20,5 +20,8 @@ class Error(db.Model):
         Error(error=log).put();
 
     @staticmethod
-    def latest():
-        return Error.all().order('-when').fetch(10)
+    def latest(items=10, since=None):
+        q = Error.all().
+        if since:
+            q = q.filter('when >', since) 
+        return q.order('-when').fetch(items)

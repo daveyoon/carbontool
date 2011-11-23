@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+        <title>javascripr errors</title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+
+        <style>
+            body {
+                text-align:center;
+                font: 16px normal  "Helvetica Neue", 'Helvetica';
+            }
+            .content {
+                width: 800px;
+                margin: 0 auto;
+            }
+            .content h1 {
+                font-size: 48px;
+                color: #444;
+            }
+            ul {
+                list-style: none;
+            }
+            .numbers_container li {
+                display: inline;
+                list-style-type: none;
+                padding-right: 7px;
+                text-align: center;
+            }
+            .numbers_container .number {
+                width: 107px;
+                height: 117px;
+                text-align: center;
+                border-radius: 3px;
+                border: 1px solid #444;
+                box-shadow: 0px 0px 5px #CCC;
+                display: inline-block;
+            }
+            .red {
+                background-color: rgb(226, 134, 134);
+            }
+            .numbers_container .number .big {
+                color: white;
+                font-size: 57px;
+                font-weight: bold;
+                display: block;
+                padding: 10px 0 10px 0;
+                border-bottom: 1px solid rgba(230, 230, 230, 0.3);
+
+            }
+            .numbers_container .number .name {
+                color: white;
+                font-size: 13px;
+                font-weight: bold;
+            }
+            .errors {
+                text-align: left;
+            }
+            .errors li {
+                border-bottom: 1px solid #CCC;
+            }
+            .errors li h2 {
+                font-size: 16px;
+                color: #444;
+            }
+            .errors li p {
+                font-family: 'Courier New';
+            }
+        </style>
+
+        <script type="text/javascript">
+                // utils
+                Mini = (function() {
+                    var _bind = function(obj, fn) {
+                        return function() {
+                            fn.apply(obj, Array.prototype.slice.call(arguments));
+                        }
+                    }
+                    var _extend = function(obj, source) {
+                        for (var prop in source) 
+                            if (source[prop] !== void 0) obj[prop] = source[prop];
+                    }
+
+                    // class
+                    function extend(obj) {
+                        var F = function() { 
+                            this.init && this.init.apply(this, Array.prototype.slice.call(arguments, 1));
+                        }
+                        F.prototype = new this();
+                        _extend(F.prototype, obj);
+                        return F;
+                    }
+
+                    //- events
+                    function Event() {}
+                    Event.prototype.on = function(evt, callback) { 
+                        var cb = this.callbacks = this.callbacks || {};
+                        var l = cb[evt] || (cb[evt] = []);
+                        l.push(callback);
+                    }
+                    Event.prototype.emit = function(evt) {
+                        var c = this.callback || this.callbacks[evt];
+                        for(var i = 0; c && i < c.length; ++i) {
+                            c[i].apply(this, Array.prototype.slice.call(arguments, 1));
+                        }
+                    }
+
+                    // model
+                    function Model() { this._data = {} }
+                    Model.extend = extend;
+                    Model.prototype = new Event();
+                    Model.prototype.fetch = function() {
+                        var self = this;
+                        $.getJSON(this.url).success(function(data) {
+                            self._data = data;
+                            self.emit('reset', self._data);
+                       }).error(function() {
+                                self.emit('error');
+                        });
+                    }
+
+                    // view
+                    function View() {
+                    }
+                    View.extend = extend;
+                    View.prototype = new Event();
+                    View.prototype.$ = function(el) {
+                        return this.el.find(el);
+                    }
+                    View.events = function(obj) { }
+                    View.prototype.tmpl = function (s, d){
+                         for(var p in d) s = s.replace(new RegExp('{'+ p + '}','g'), d[p]);
+                         return s;
+                    }
+
+                    return {
+                        Event: Event,
+                        Model: Model,
+                        View: View,
+                        bind: _bind
+                    }
+                })();
+
+
+                $(function() {
+                    var Errors = Mini.Model.extend({
+                        url: '/api/v0/error',
+                    });
+                    var errors = new Errors();
+                    var ErrorView = Mini.View.extend({
+                        el: $('.content'),
+                        err_template: '<li><h2>{date}</h2><p>{error}</p></li>',
+                        init: function() {
+                            errors.on('reset', Mini.bind(this, this.render));
+                        },
+                        render: function(data) {
+                            this.$('.total .big').html(data.count);
+                            var ul = this.$('.errors');
+                            ul.hide();
+                            ul.html('');
+                            for(var e in data.latest) {
+                                var err = data.latest[e];
+                                console.log(err, this.err_template);
+                                ul.append(this.tmpl(this.err_template, { 
+                                        'error': err.error, 
+                                        'date': function() {
+                                            return new Date(parseInt(err.date, 10)*1000);
+                                        }
+                                }));
+                            }
+                            ul.fadeIn();
+                        }
+                    });
+                    setInterval(function() {
+                        errors.fetch();
+                    }, 1000*3);
+                    var v = new ErrorView();
+                });
+
+
+
+        </script>
+        </head>
+        <body>
+    <div class="content">
+        <div class="title">
+            <h1 class="tk-adelle">Javascript Errors@vizzuality</h1>
+        </div>
+        <div class="numbers_container">
+            <ul>
+                <li>
+                    <div class="number blue n0">
+                        <span class="big">41</span>
+                        <span class="name">PP</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="number red n1 total">
+                        <span class="big"></span>
+                        <span class="name">TOTAL</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="number green n2">
+                        <span class="big">2</span>
+                        <span class="name">OTROS</span>
+                    </div>
+                </li>
+            </div>
+        </ul>
+        <h2>Error stream</h2>
+        <ul class="errors">
+        </ul>
+    <!--<div class="overlay right">-->
+        <!--<ul>-->
+            <!--<li>-->
+                <!--<a class="selected" href="#">2011</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a href="#">2008</a>-->
+            <!--</li>-->
+        <!--</ul>-->
+    <!--</div>-->
+
+</body>
+</html>
