@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     (r'^nojavascript$', direct_to_template, {'template':'nojs.html'}),
     (r'^ie6$', direct_to_template, {'template':'ie6.html'}),
     (r'^error$', direct_to_template, {'template':'error.html'}),
+    (r'^error_test$', direct_to_template, {'template':'error_test.html'}),
     (r'^api/v0/', include('carbontool.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

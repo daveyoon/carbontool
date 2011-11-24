@@ -74,6 +74,18 @@ def proxy(request, host):
         return r
     return HttpResponse("use POST", status=404)
 
+def error_track(request):
+    err = request.GET.get('e', '')
+    ua = request.META['HTTP_USER_AGENT']
+    host = request.get_host()
+    if err:
+        Error.track({
+            'error': err,
+            'ua': ua,
+            'host': host
+        })
+    return HttpResponse('', mimetype='application/json')
+
 @csrf_exempt
 def error(request):
     if request.method == "POST":
@@ -82,7 +94,7 @@ def error(request):
     else:
         data = {
             'count': Error.count(),
-            'latest': [{'date': time.mktime(x.when.timetuple()) , 'error': x.error} for x in Error.latest()]
+            'latest': [x.to_dict() for x in Error.latest()]
         }
         return HttpResponse(json.dumps(data), mimetype='application/json')
 

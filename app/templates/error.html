@@ -4,7 +4,6 @@
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
         <title>javascripr errors</title>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 
         <style>
             body {
@@ -64,11 +63,80 @@
                 font-size: 16px;
                 color: #444;
             }
-            .errors li p {
+            .errors li p.where{
+                padding-top: 10px;
+            }
+            .errors li p.error {
                 font-family: 'Courier New';
+                background-color: #EEE;
+                padding: 10px;
+                border: 1px solid #CCC;
+            }
+            .errors li p.date {
+                color: #999;
+                font-size: 11px;
+            }
+            .errors li .times {
+                float: left;
+                font-size: 40px;
+                font-weight: bold;
+                width: 50px;
+                padding: 0px 5px;
             }
         </style>
 
+        </head>
+        <body>
+    <div class="content">
+        <div class="title">
+            <h1 class="tk-adelle">Javascript Errors@vizzuality</h1>
+        </div>
+        <div class="numbers_container">
+            <ul>
+                <li>
+                    <div class="number blue n0">
+                        <span class="big">41</span>
+                        <span class="name">PP</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="number red n1 total">
+                        <span class="big"></span>
+                        <span class="name">TOTAL</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="number green n2">
+                        <span class="big">2</span>
+                        <span class="name">OTROS</span>
+                    </div>
+                </li>
+            </div>
+        </ul>
+        <h2>Error stream</h2>
+        <ul class="errors">
+            <li>
+                <div class="times">{times}</div>
+                <div>
+                    <p class="where">{where}</p>
+                    <p class="error">{error}</p>
+                    <p class="date">{date}</p>
+                </div>
+            </li>
+        </ul>
+    <!--<div class="overlay right">-->
+        <!--<ul>-->
+            <!--<li>-->
+                <!--<a class="selected" href="#">2011</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a href="#">2008</a>-->
+            <!--</li>-->
+        <!--</ul>-->
+    <!--</div>-->
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+        <script>window.jQuery || document.write("<script src='js/libs/jquery-1.5.1.min.js'>\x3C/script>")</script>
         <script type="text/javascript">
                 // utils
                 Mini = (function() {
@@ -142,6 +210,14 @@
                     }
                 })();
 
+                function prettyDate(time){
+                    var date=new Date(time);
+                    var diff=(((new Date()).getTime()-date.getTime())/1000);
+                    var day_diff=Math.floor(diff/86400);
+                    if(isNaN(day_diff)||day_diff<0||day_diff>=31) {
+                        return;
+                    }
+                    return day_diff==0 && (diff<60&&"just now"||diff<120&&"1 minute ago"||diff<3600&&Math.floor(diff/60)+" minutes ago"||diff<7200&&"1 hour ago"||diff<86400&&Math.floor(diff/3600)+" hours ago")||day_diff==1&&"Yesterday"||day_diff<7&&day_diff+" days ago"||day_diff<31&&Math.ceil(day_diff/7)+" weeks ago";}
 
                 $(function() {
                     var Errors = Mini.Model.extend({
@@ -150,7 +226,7 @@
                     var errors = new Errors();
                     var ErrorView = Mini.View.extend({
                         el: $('.content'),
-                        err_template: '<li><h2>{date}</h2><p>{error}</p></li>',
+                        err_template: $('.content .errors').html(),
                         init: function() {
                             errors.on('reset', Mini.bind(this, this.render));
                         },
@@ -163,15 +239,20 @@
                                 var err = data.latest[e];
                                 console.log(err, this.err_template);
                                 ul.append(this.tmpl(this.err_template, { 
-                                        'error': err.error, 
+                                        'where': function() {
+                                            return err.error.error.split('$')[0];
+                                        },
+                                        'times': err.times,
+                                        'error': err.error.error, 
                                         'date': function() {
-                                            return new Date(parseInt(err.date, 10)*1000);
+                                            return prettyDate(parseInt(err.date, 10)*1000);
                                         }
                                 }));
                             }
                             ul.fadeIn();
                         }
                     });
+                    errors.fetch();
                     setInterval(function() {
                         errors.fetch();
                     }, 1000*3);
@@ -181,47 +262,5 @@
 
 
         </script>
-        </head>
-        <body>
-    <div class="content">
-        <div class="title">
-            <h1 class="tk-adelle">Javascript Errors@vizzuality</h1>
-        </div>
-        <div class="numbers_container">
-            <ul>
-                <li>
-                    <div class="number blue n0">
-                        <span class="big">41</span>
-                        <span class="name">PP</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="number red n1 total">
-                        <span class="big"></span>
-                        <span class="name">TOTAL</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="number green n2">
-                        <span class="big">2</span>
-                        <span class="name">OTROS</span>
-                    </div>
-                </li>
-            </div>
-        </ul>
-        <h2>Error stream</h2>
-        <ul class="errors">
-        </ul>
-    <!--<div class="overlay right">-->
-        <!--<ul>-->
-            <!--<li>-->
-                <!--<a class="selected" href="#">2011</a>-->
-            <!--</li>-->
-            <!--<li>-->
-                <!--<a href="#">2008</a>-->
-            <!--</li>-->
-        <!--</ul>-->
-    <!--</div>-->
-
 </body>
 </html>
