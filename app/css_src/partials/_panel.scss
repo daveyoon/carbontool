@@ -193,7 +193,6 @@
     }
     .report_stats {
       position: absolute;
-      //height: 200px;
       width: 324px;
       top: 80px;
       bottom: 0;
@@ -222,7 +221,7 @@
       @include background(0,-474px,no-repeat);
 
       h2 {float:left; padding:0; margin:0}
-      span.tools {float:right; margin:0; padding:0; }
+      span.tools {float:right; margin:0; padding:0;}
 
       p {
         float:left;
@@ -258,9 +257,13 @@
         width:16px;
         height:21px;
         margin:7px 0 0 0;
-        text-indent:-9999px;
-        font-size:0;
-        line-height:0;
+        text-indent:-999px;
+        display: block;
+        float: left;
+        text-transform: capitalize;
+        overflow: hidden;
+        /*font-size:0;*/
+        /*line-height:0;*/
         @include background(-22px,-453px,no-repeat);
       }
 
@@ -353,7 +356,7 @@
     // content
     div.block {
       width:100%;
-      margin:15px 0 0 0;
+      margin:25px 0 0 0;
 
       span.title {
         float:left;
@@ -477,8 +480,8 @@
             &.ko {padding:0 15px 0 0; @include background(no-repeat,right,-397px);}
           }
 
-          &.last {border:none}
-          &:last-child {border:none}
+          &.last {border:none; margin-bottom: 10px;}
+          &:last-child {border:none; margin-bottom: 10px;}
         }
 
         &.tooltip {
