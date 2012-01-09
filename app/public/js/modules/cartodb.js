@@ -232,7 +232,7 @@ GROUP BY priority, country";
         stats_query(SQL_COVERED_KBA, p, function(data) {
             if(data) {
                 callback({
-                    'percent': data.rows[0].kba_percentage || 0,
+                    'percent': Math.min(100, data.rows[0].kba_percentage || 0),
                     'num_overlap': data.rows[0].count|| 0
                 });
             } else {

@@ -49,7 +49,7 @@
 <div class="block">
     <span class="title">
         <h2>COVERED BY PAs</h2>
-        <p><%= (1e8*stats.covered_by_PA.km2/stats.carbon_sequestration.area).toFixed(0) %><small>%</small></p>
+        <p><% print(Math.min('100', (1e8*stats.covered_by_PA.km2/stats.carbon_sequestration.area).toFixed(0))); %><small>%</small></p>
     </span>
     <ul class="normal list">
       <li>
