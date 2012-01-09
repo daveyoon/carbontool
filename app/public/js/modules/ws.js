@@ -140,7 +140,7 @@ App.modules.WS = function(app) {
                     percent_seq =  percent*s.carbon_sequestration.qty/s.carbon.qty;
                 }
                 return {
-                    polygon: 'AOI #' + i,
+                    polygon: 'AOI #' + (i + 1),
                     percent: 100*percent,
                     percent_seq: 100*percent_seq,
                     carbon: s.carbon ? s.carbon.qty: 0,
