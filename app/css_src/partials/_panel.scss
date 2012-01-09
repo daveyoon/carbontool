@@ -373,6 +373,30 @@
       overflow: hidden;
       @include background(-83px,-1908px,no-repeat);
 
+      a.start_drawing {
+        float:left;
+        width:auto;
+        height:30px;
+        margin:2px 0 0 90px;
+        padding:0 0 0 12px;
+        @include background(-2px,-453px,no-repeat);
+        font:bold 13px "WhitneyBold";
+        color:white;
+        @include background(0,-790px,no-repeat);
+        @include text-shadow(#3C7D7D);
+        text-decoration:none;
+
+        span {
+          float:left;
+          width:auto;
+          height:14px;
+          padding:8px 12px 8px 0;
+          @include background(right,-820px,no-repeat);
+        }
+
+        &:hover {text-decoration:underline;}
+      }
+
       div.inner {
         width:300px;
 

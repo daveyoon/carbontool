@@ -13,6 +13,7 @@ var Report = Backbone.View.extend({
         'click .editing .leave_edit': 'leave_edit',
         'click .removing .cancel': 'leave_edit',
         'click .removing .remove_it_please': 'remove_polygons',
+        'click .start_drawing': 'go_edit',
         'mouseover .tooltip li': 'show_tooltip',
         'mouseleave .tooltip li': 'hide_tooltip',
 
@@ -69,7 +70,7 @@ var Report = Backbone.View.extend({
         } else {
             $(this.el).html(this.template_no_content(data));
             this.header = null;
-            this.go_edit();
+            //this.go_edit();
         }
         this.loading(this.showing_loading);
         return this;
