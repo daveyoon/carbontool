@@ -71,9 +71,6 @@ App.modules.Carbon = function(app) {
                 }
                 */
             });
-            this.bus.on('view:show_report', function(id, r) {
-                //self.map.editing(r.polygons.length === 0);
-            });
 
             this.bus.on('view:show_error', function(error) {
               app.Error.show(error);
