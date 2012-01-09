@@ -72,7 +72,7 @@ var SQL_COUNTRIES = " \
 SELECT priority, country, ST_Area(ST_Intersection( \
  ST_Union(mg.the_geom)::geography, \
  ST_GeographyFromText('<%= polygon %>') \
-))/1000000 AS covered_area \
+)) AS covered_area \
 FROM gaps_merged mg \
 WHERE ST_Intersects(mg.the_geom, \
  ST_GeometryFromText('<%= polygon %>', 4326) \
