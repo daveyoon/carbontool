@@ -20,7 +20,7 @@ App.modules.Banner = function(app) {
             if(e) e.preventDefault();
             if(!this.creating) {
               self.bus.emit('model:create_work');
-              this.$('.button_info').html("creating...");
+              this.$('.button_info').html("starting...");
             }
             this.creating = true;
         },
