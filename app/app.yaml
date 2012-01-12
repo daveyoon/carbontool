@@ -5,7 +5,7 @@
 # Note: file names are case-sensitive and spaces in paths is not supported.
 
 application: viz-carbontool
-version: 2
+version: 3
 runtime: python27
 api_version: 1
 threadsafe: true
