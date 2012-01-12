@@ -1,9 +1,14 @@
 # Django settings for carbontool project.
 import os
 import logging
+import sys, urlparse
 
 PRODUCTION = False
 if 'SERVER_SOFTWARE' in os.environ and os.environ['SERVER_SOFTWARE'].startswith('Google App Engine'):
+    PRODUCTION = True
+
+# heroku
+if os.environ.has_key('DATABASE_URL'):
     PRODUCTION = True
 
 
@@ -69,3 +74,22 @@ if DEBUG:
         level = logging.DEBUG,
         format = '%(asctime)s %(levelname)s %(message)s',
     )
+
+urlparse.uses_netloc.append('postgres')
+urlparse.uses_netloc.append('mysql')
+try:
+    if os.environ.has_key('DATABASE_URL'):
+        url = urlparse.urlparse(os.environ['DATABASE_URL'])
+        DATABASES['default'] = {
+            'NAME':     url.path[1:],
+            'USER':     url.username,
+            'PASSWORD': url.password,
+            'HOST':     url.hostname,
+            'PORT':     url.port,
+        }
+        if url.scheme == 'postgres':
+            DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+        if url.scheme == 'mysql':
+            DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
+except:
+    print "Unexpected error:", sys.exc_info()
