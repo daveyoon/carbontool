@@ -305,19 +305,19 @@ GROUP BY priority, country";
             var priorities = {
                 "Extremamente Alta": 0,
                 "extrema": 0,
-                "Muito Alta": 1,
-                "Very High": 1,
-                "Alta": 2,
-                "alta": 2,
-                "High": 2,
-                "media": 3,
-                "Medium": 3
+                "Muito Alta": 0,
+                "Very High": 0,
+                "Alta": 1,
+                "alta": 1,
+                "High": 1,
+                "media": 2,
+                "Medium": 2
                 //"HUECO": 1
             };
             if(data) {
                 _.each(data.rows, function(r) {
                     var priority = priorities[r.priority];
-                    if(priority) {
+                    if(priority !== undefined) {
                         countries[r.country] = countries[r.country] || new Array(0,0,0,0,0);
                         if(total_area) {
                             countries[r.country][priority] = 100*r.covered_area/total_area;
