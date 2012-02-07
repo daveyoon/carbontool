@@ -75,7 +75,7 @@ App.modules.WS = function(app) {
 
             function ready(what) {
                 if(what == 'carbon') {
-                    app.CartoDB.conservation_priorities(polygons, stats.carbon.qty, function(data) {
+                    app.CartoDB.conservation_priorities(polygons, stats.carbon.area, function(data) {
                         stats['conservation_priorities'] = data;
                         callback(stats);
                     });
