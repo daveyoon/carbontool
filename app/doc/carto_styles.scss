@@ -1,0 +1,34 @@
+
+#gap_analysis{
+         polygon-opacity:1;
+         line-opacity:1;
+         line-width:0.2;
+         line-color:#FFFFFF;
+         [priority='Alta']{
+             polygon-fill:#FFEDA0;
+         }
+    [priority='Muito Alta']{
+             polygon-fill:#FEB24C;
+         }
+    [priority='Extremamente Alta']{
+             polygon-fill:#F03B20;
+         }
+    [priority='Medium']{
+             polygon-fill:#FFEDA0;
+         }
+    [priority='High']{
+             polygon-fill:#FEB24C;
+         }
+    [priority='Very High']{
+             polygon-fill:#F03B20;
+         }
+    [priority='media']{
+             polygon-fill:#FFEDA0;
+         }
+    [priority='alta']{
+             polygon-fill:#FEB24C;
+         }
+    [priority='extrema']{
+             polygon-fill:#F03B20;
+         }
+}
