@@ -305,11 +305,11 @@ GROUP BY priority, country";
             var priorities = {
                 "Extremamente Alta": 0,
                 "extrema": 0,
-                "Muito Alta": 0,
                 "Very High": 0,
-                "Alta": 1,
-                "alta": 1,
+                "Muito Alta": 1,
                 "High": 1,
+                "alta": 1,
+                "Alta": 2, // this is ok despite of the translation
                 "media": 2,
                 "Medium": 2
                 //"HUECO": 1
