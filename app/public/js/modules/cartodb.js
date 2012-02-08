@@ -13,6 +13,7 @@ ST_Intersects( \
 );";
 
 var SQL_CARBON_COUNTRIES = "\
+SET statement_timeout TO 100000; \
 SELECT country, SUM((ST_Value(rast, 1, x, y) / 100) * ((ST_Area(ST_Transform(ST_SetSRID(ST_PixelAsPolygon(rast, x, y), 4326), 954009)) / 10000) / 100)) AS total, \
 ST_Area(ST_GeomFromText('<%= polygon %>', 4326)::geography) as area \
 FROM carbonintersection CROSS JOIN \
