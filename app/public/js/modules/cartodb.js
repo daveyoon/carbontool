@@ -330,7 +330,7 @@ GROUP BY priority, country";
                 var stats = [];
                 _.each(countries, function(percents, country) {
                     var total = percents[0] + percents[1] + percents[2] + percents[3];
-                    percents[4] = 100 - total;
+                    percents[4] = Math.max(0, 100 - total);
                     stats.push({ name: country, percents: percents});
                 });
                 callback(stats);
