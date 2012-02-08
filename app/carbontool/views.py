@@ -61,9 +61,19 @@ def work(request, work_hash=None):
 
     return HttpResponse(data, status=status, mimetype='application/json')
 
+from google.appengine.api import urlfetch
+
+
 @csrf_exempt
 def proxy(request, host):
     if request.method == "POST":
+        result = urlfetch.fetch(host, payload=request.raw_post_data, method="POST", deadline=60)
+        if result.status_code == 200:
+            r = HttpResponse(result.content)
+            if 'content-type' in result.headers:
+                r['content-type'] = result.headers['content-type']
+            return r
+        """
         f = urllib2.urlopen(host, request.raw_post_data)
         nfo = f.info()
         r = HttpResponse(f.read())
@@ -71,6 +81,7 @@ def proxy(request, host):
           if h in ['content-type']:
             r[h] = nfo.getheader(h)
         return r
+        """
     return HttpResponse("use POST", status=404)
 
 @csrf_exempt
